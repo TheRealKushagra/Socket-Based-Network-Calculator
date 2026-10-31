@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetCalc | Network Calculator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #0b1120;
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 24px 8%;
+            background: #111a2e;
+            border-bottom: 1px solid #26334d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #60a5fa;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .status {
+            font-size: 13px;
+            color: #86efac;
+            background: #143326;
+            padding: 8px 13px;
+            border-radius: 20px;
+        }
+
+        main {
+            width: 84%;
+            max-width: 1200px;
+            margin: 45px auto;
+        }
+
+        .intro {
+            margin-bottom: 32px;
+        }
+
+        .intro h1 {
+            font-size: clamp(28px, 4vw, 42px);
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .intro p {
+            color: #9ca3af;
+            line-height: 1.7;
+            max-width: 750px;
+        }
+
+        .architecture {
+            margin-top: 18px;
+            color: #93c5fd;
+            font-size: 13px;
+            word-spacing: 3px;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #111a2e;
+            border: 1px solid #26334d;
+            border-radius: 15px;
+            padding: 24px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        .icon {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            font-size: 19px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .card p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #9ca3af;
+            min-height: 42px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0b1120;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #111a2e;
+            border: 1px solid #334155;
+            border-radius: 15px;
+        }
+
+        .results h2 {
+            margin-bottom: 20px;
+            color: #93c5fd;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .result-item {
+            padding: 16px;
+            background: #0b1120;
+            border: 1px solid #26334d;
+            border-radius: 9px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .error {
+            margin-top: 25px;
+            padding: 16px;
+            border: 1px solid #7f1d1d;
+            background: #35151b;
+            color: #fca5a5;
+            border-radius: 9px;
+            overflow-wrap: anywhere;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 28px 15px;
+            margin-top: 50px;
+            color: #64748b;
+            border-top: 1px solid #26334d;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 900px) {
+            .tools {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            main {
+                width: 90%;
+            }
+
+            .card p {
+                min-height: 0;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 20px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Net<span>Calc</span></div>
+    <div class="status">● TCP Server Architecture</div>
+</header>
+
+<main>
+
+    <section class="intro">
+        <h1>Network Calculator</h1>
+
+        <p>
+            An interactive networking utility powered by Python, Flask
+            and TCP socket communication. Calculate subnet details,
+            identify IPv4 classes and determine address ranges.
+        </p>
+
+        <div class="architecture">
+            Browser &rarr; Flask &rarr; TCP Client &rarr; TCP Server
+        </div>
+    </section>
+
+    <section class="tools">
+
+        <div class="card">
+            <div class="icon">🧮</div>
+            <h2>Subnet Calculator</h2>
+            <p>Calculate network address, subnet mask, broadcast address and usable hosts.</p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="operation" value="subnet">
+
+                <label for="subnet-ip">IPv4 Address / CIDR</label>
+
+                <input
+                    type="text"
+                    id="subnet-ip"
+                    name="input_value"
+                    placeholder="192.168.1.10/24"
+                    value="{{ input_value if selected_operation == 'subnet' else '' }}"
+                    required
+                >
+
+                <button type="submit">Calculate Subnet</button>
+            </form>
+
+            <div class="hint">Example: 192.168.1.10/24</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌐</div>
+            <h2>IP Class Detector</h2>
+            <p>Identify the IPv4 address class, default subnet mask and address type.</p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="operation" value="ip_class">
+
+                <label for="class-ip">IPv4 Address</label>
+
+                <input
+                    type="text"
+                    id="class-ip"
+                    name="input_value"
+                    placeholder="192.168.1.10"
+                    value="{{ input_value if selected_operation == 'ip_class' else '' }}"
+                    required
+                >
+
+                <button type="submit">Detect IP Class</button>
+            </form>
+
+            <div class="hint">Example: 10.0.0.1</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">📡</div>
+            <h2>IP Address Range</h2>
+            <p>Find a network's address range, first and last usable addresses, and capacity.</p>
+
+            <form method="POST" action="/">
+                <input type="hidden" name="operation" value="range">
+
+                <label for="range-ip">Network / CIDR</label>
+
+                <input
+                    type="text"
+                    id="range-ip"
+                    name="input_value"
+                    placeholder="192.168.1.0/28"
+                    value="{{ input_value if selected_operation == 'range' else '' }}"
+                    required
+                >
+
+                <button type="submit">Calculate Range</button>
+            </form>
+
+            <div class="hint">Example: 192.168.1.0/28</div>
+        </div>
+
+    </section>
+
+    {% if error %}
+        <section class="error">
+            <strong>Request Error:</strong> {{ error }}
+        </section>
+    {% endif %}
+
+    {% if result %}
+        <section class="results">
+            <h2>Calculation Results</h2>
+
+            <div class="result-grid">
+
+                {% for key, value in result.items() %}
+                    <div class="result-item">
+                        <div class="result-label">
+                            {{ key.replace('_', ' ').title() }}
+                        </div>
+
+                        <div class="result-value">
+                            {{ value }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+    {% endif %}
+
+</main>
+
+<footer>
+    NetCalc — Socket-Based Network Calculator Service<br>
+    Built with Python · Flask · TCP Sockets · IPv4 Subnetting
+</footer>
+
+</body>
+</html>
